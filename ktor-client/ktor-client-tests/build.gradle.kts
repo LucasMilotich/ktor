@@ -104,7 +104,7 @@ kotlin.sourceSets {
     }
 
     if (rootProject.ext.get("native_targets_enabled") as Boolean) {
-        if (!KtorBuildProperties.ideaActive) {
+        if (!IDEA_ACTIVE) {
             listOf("linuxX64Test", "mingwX64Test", "macosX64Test").map { getByName(it) }.forEach {
                 it.dependencies {
                     api(project(":ktor-client:ktor-client-curl"))
@@ -126,13 +126,13 @@ kotlin.sourceSets {
         } else {
             val posixTest by getting {
                 dependencies {
-                    val hostname: String by project.ext
+//                    val hostname: String by project.ext
                     // api(project(":ktor-client:ktor-client-ios"))
                     api(project(":ktor-client:ktor-client-curl"))
 
-                    if (!hostname.startsWith("win")) {
-                        api(project(":ktor-client:ktor-client-cio"))
-                    }
+//                    if (!hostname.startsWith("win")) {
+//                        api(project(":ktor-client:ktor-client-cio"))
+//                    }
                 }
             }
         }
@@ -160,7 +160,7 @@ val testTasks = mutableListOf(
     "darwinTest"
 )
 
-if (!KtorBuildProperties.ideaActive) {
+if (!IDEA_ACTIVE) {
     testTasks += listOf(
         "macosX64Test",
         "linuxX64Test",
@@ -180,16 +180,16 @@ rootProject.allprojects {
             if (!(rootProject.ext.get("native_targets_enabled") as Boolean)) {
                 return@sourceSets
             }
-            if (KtorBuildProperties.ideaActive) {
+            if (IDEA_ACTIVE) {
                 if (name == "posixTest") {
                     getByName(name) {
                         dependencies {
-                            val hostname: String by project.ext
+//                            val hostname: String by project.ext
                             api(project(":ktor-client:ktor-client-curl"))
 
-                            if (!hostname.startsWith("win")) {
-                                api(project(":ktor-client:ktor-client-cio"))
-                            }
+//                            if (!hostname.startsWith("win")) {
+//                                api(project(":ktor-client:ktor-client-cio"))
+//                            }
                         }
                     }
                 }
@@ -225,14 +225,5 @@ gradle.buildFinished {
     if (startTestServer.server != null) {
         startTestServer.server?.close()
         println("[TestServer] stop")
-    }
-}
-
-// TODO: this test is failing on JVM IR
-if (rootProject.ext.get("jvm_ir_enabled") as Boolean) {
-    tasks.named<Test>("jvmTest") {
-        filter {
-            excludeTest("io.ktor.client.tests.MultithreadedTest", "numberTest")
-        }
     }
 }

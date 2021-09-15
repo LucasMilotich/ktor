@@ -5,13 +5,7 @@ import org.gradle.api.*
 import org.gradle.kotlin.dsl.*
 import java.io.*
 
-val skipModules = listOf(
-    "ktor-client-cio"
-)
-
-fun Project.configureJsModules() {
-    if (skipModules.contains(project.name)) return
-
+fun Project.configureJs() {
     configureJsTasks()
 
     kotlin {
@@ -37,7 +31,7 @@ fun Project.configureJsModules() {
 
 private fun Project.configureJsTasks() {
     kotlin {
-        js {
+        js(IR) {
             nodejs {
                 testTask {
                     useMocha {
@@ -79,9 +73,6 @@ private fun Project.configureJsTasks() {
 private fun Project.configureTestTask() {
     val shouldRunJsBrowserTest = !hasProperty("teamcity") || hasProperty("enable-js-tests")
 
-    val jsLegacyBrowserTest by tasks.getting
-    jsLegacyBrowserTest.onlyIf { shouldRunJsBrowserTest }
-
-    val jsIrBrowserTest by tasks.getting
-    jsIrBrowserTest.onlyIf { shouldRunJsBrowserTest }
+    val jsBrowserTest by tasks.getting
+    jsBrowserTest.onlyIf { shouldRunJsBrowserTest }
 }

@@ -2,7 +2,8 @@ plugins {
     id 'java-platform'
 }
 
-apply from: rootProject.file('gradle/publish.gradle')
+// TODO
+// apply from: rootProject.file('gradle/publish.gradle')
 
 def name = project.name
 
@@ -20,10 +21,10 @@ dependencies {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            from components.javaPlatform
-        }
-    }
-}
+//publishing {
+//    publications {
+//        maven(MavenPublication) {
+//            from components.javaPlatform
+//        }
+//    }
+//}
