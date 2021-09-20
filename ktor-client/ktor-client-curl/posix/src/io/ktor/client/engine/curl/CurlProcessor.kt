@@ -16,8 +16,8 @@ import kotlin.native.concurrent.*
 private lateinit var curlApi: CurlMultiApiHandler
 
 internal class CurlProcessor(
-    override val coroutineContext: CoroutineContext
-) : CoroutineScope {
+    coroutineContext: CoroutineContext
+) {
     @OptIn(ExperimentalCoroutinesApi::class)
     private val curlDispatcher: SingleThreadDispatcher = newSingleThreadContext("curl-dispatcher")
     private val curlScope = CoroutineScope(coroutineContext + curlDispatcher)
@@ -50,13 +50,21 @@ internal class CurlProcessor(
     @OptIn(ExperimentalCoroutinesApi::class)
     public fun close() {
         runBlocking {
-            curlScope.launch { curlApi.close() }.join()
+            println("CLOSING API")
+            curlScope.launch {
+                println("CLOSING API CALL")
+                curlApi.close()
+            }.join()
+            println("CLOSED API")
         }
+        println("CANCEL SCOPE")
         curlScope.cancel()
+        println("CLOSE DISPATCHER")
         curlDispatcher.close()
+        println("CLOSED")
     }
 
-    private fun curlPerform() = curlScope.launch { curlApi.perform(100).freeze() }
+    private fun curlPerform() = curlScope.launch { curlApi.perform(100) }
 
     private fun cancelRequest(easyHandle: EasyHandle, cause: Throwable) {
         curlScope.launch {

@@ -19,6 +19,7 @@ import kotlin.test.*
 private const val TEST_URL = "$TEST_SERVER/timeout"
 
 class HttpTimeoutTest : ClientLoader() {
+
     @Test
     fun testGet() = clientTests {
         config {

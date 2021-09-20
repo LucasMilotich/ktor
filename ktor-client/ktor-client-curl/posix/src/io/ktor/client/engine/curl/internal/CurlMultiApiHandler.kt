@@ -26,12 +26,12 @@ internal class CurlMultiApiHandler : Closeable {
 
     override fun close() {
         for ((handle, _) in activeHandles) {
-            curl_multi_remove_handle(multiHandle, handle).verify()
-            curl_easy_cleanup(handle)
+//            curl_multi_remove_handle(multiHandle, handle).verify()
+//            curl_easy_cleanup(handle)
         }
 
         activeHandles.clear()
-        curl_multi_cleanup(multiHandle).verify()
+//        curl_multi_cleanup(multiHandle).verify()
     }
 
     public fun scheduleRequest(request: CurlRequestData, deferred: CompletableDeferred<CurlSuccess>): EasyHandle {
@@ -100,7 +100,7 @@ internal class CurlMultiApiHandler : Closeable {
 
     internal fun cancelRequest(easyHandle: EasyHandle, cause: Throwable) {
         cancelledHandles += Pair(easyHandle, cause)
-        curl_multi_remove_handle(multiHandle, easyHandle).verify()
+//        curl_multi_remove_handle(multiHandle, easyHandle).verify()
     }
 
     public fun perform(millis: Int = 100) {
@@ -207,8 +207,8 @@ internal class CurlMultiApiHandler : Closeable {
                 responseBuilder.headersBytes.release()
             }
         } finally {
-            curl_multi_remove_handle(multiHandle, easyHandle).verify()
-            curl_easy_cleanup(easyHandle)
+//            curl_multi_remove_handle(multiHandle, easyHandle).verify()
+//            curl_easy_cleanup(easyHandle)
         }
     }
 
@@ -235,8 +235,8 @@ internal class CurlMultiApiHandler : Closeable {
                 responseBuilder.headersBytes.release()
             }
         } finally {
-            curl_multi_remove_handle(multiHandle, easyHandle).verify()
-            curl_easy_cleanup(easyHandle)
+//            curl_multi_remove_handle(multiHandle, easyHandle).verify()
+//            curl_easy_cleanup(easyHandle)
         }
     }
 
@@ -246,7 +246,7 @@ internal class CurlMultiApiHandler : Closeable {
         result: CURLcode,
         httpStatusCode: Long
     ): CurlFail? {
-        curl_slist_free_all(request.headers)
+//        curl_slist_free_all(request.headers)
 
         if (message != CURLMSG.CURLMSG_DONE) {
             return CurlFail(
